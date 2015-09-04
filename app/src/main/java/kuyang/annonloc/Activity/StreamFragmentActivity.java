@@ -1,17 +1,21 @@
 package kuyang.annonloc.Activity;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import kuyang.annonloc.Adapter.StreamFragmentAdapter;
+import kuyang.annonloc.Fragment.StreamFragment;
 import kuyang.annonloc.Listener.TabListener;
 import kuyang.annonloc.R;
 
@@ -26,18 +30,32 @@ public class StreamFragmentActivity extends ActionBarActivity{
     private ArrayAdapter<String> mAdapter;
     private String mActivityTitle;
     private ActionBar actionBar;
+    private android.support.v4.view.ViewPager mViewPager;
+    private StreamFragmentAdapter streamFragmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupActionbar();
         setContentView(R.layout.stream_activity_main);
-
         mDrawerList = (ListView)findViewById(R.id.left_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
+        mViewPager  = (ViewPager) findViewById(R.id.main_fragment);
+        streamFragmentAdapter = new StreamFragmentAdapter(getSupportFragmentManager());
+        Log.i("is mViewPager null?", "" + (mViewPager == null));
+        mViewPager.setAdapter(streamFragmentAdapter);
+        mViewPager.setOnPageChangeListener(
+                new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        // When swiping between pages, select the
+                        // corresponding tab.
+                        actionBar.setSelectedNavigationItem(position);
+                    }
+                });
         addDrawerItems();
         setupDrawer();
+        setupActionbar();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -93,12 +111,22 @@ public class StreamFragmentActivity extends ActionBarActivity{
         ActionBar.Tab tab_NEAR = actionBar.newTab()
                 .setText(R.string.NEAR)
                 .setTabListener(
-                        new TabListener<Fragment>(StreamFragmentActivity.this,"NEAR",Fragment.class)
+                        new TabListener<StreamFragment>(StreamFragmentActivity.this,"NEAR",StreamFragment.class){
+                            @Override
+                            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                                mViewPager.setCurrentItem(tab.getPosition());
+                            }
+                        }
                 );
         ActionBar.Tab tab_PIN = actionBar.newTab()
                 .setText(R.string.PIN)
                 .setTabListener(
-                    new TabListener<Fragment>(StreamFragmentActivity.this,"PIN",Fragment.class)
+                        new TabListener<StreamFragment>(StreamFragmentActivity.this, "PIN", StreamFragment.class){
+                            @Override
+                            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                                mViewPager.setCurrentItem(tab.getPosition());
+                            }
+                        }
                 );
         actionBar.addTab(tab_NEAR);
         actionBar.addTab(tab_PIN);

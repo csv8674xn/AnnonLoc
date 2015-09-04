@@ -8,18 +8,18 @@ import android.support.v7.app.ActionBar;
 /**
  * Created by Yao-Jung on 2015/9/3.
  */
-public class TabListener<T extends Fragment> implements ActionBar.TabListener {
+public class TabListener<StreamFragment extends Fragment> implements ActionBar.TabListener {
     private Fragment mFragment;
     private final Activity mActivity;
     private final String mTag;
-    private final Class<T> mClass;
+    private final Class<StreamFragment> mClass;
 
     /** Constructor used each time a new tab is created.
      * @param activity  The host Activity, used to instantiate the fragment
      * @param tag  The identifier tag for the fragment
      * @param clz  The fragment's Class, used to instantiate the fragment
      */
-    public TabListener(Activity activity, String tag, Class<T> clz) {
+    public TabListener(Activity activity, String tag, Class<StreamFragment> clz) {
         mActivity = activity;
         mTag = tag;
         mClass = clz;
