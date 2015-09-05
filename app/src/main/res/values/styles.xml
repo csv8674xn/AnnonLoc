@@ -1,8 +1,19 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
+
+    <style name="ReplyFormat">
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingLeft">13dp</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_width">match_parent</item>
     </style>
 
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
 </resources>

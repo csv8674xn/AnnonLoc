@@ -1,5 +1,6 @@
 package kuyang.annonloc.Activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -11,7 +12,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import kuyang.annonloc.Adapter.StreamFragmentAdapter;
@@ -28,6 +31,7 @@ public class StreamFragmentActivity extends ActionBarActivity{
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ArrayAdapter<String> mAdapter;
+    private EditText mEditText;
     private String mActivityTitle;
     private ActionBar actionBar;
     private android.support.v4.view.ViewPager mViewPager;
@@ -40,23 +44,12 @@ public class StreamFragmentActivity extends ActionBarActivity{
         mDrawerList = (ListView)findViewById(R.id.left_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
-        mViewPager  = (ViewPager) findViewById(R.id.main_fragment);
         streamFragmentAdapter = new StreamFragmentAdapter(getSupportFragmentManager());
-        Log.i("is mViewPager null?", "" + (mViewPager == null));
-        mViewPager.setAdapter(streamFragmentAdapter);
-        mViewPager.setOnPageChangeListener(
-                new ViewPager.SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        // When swiping between pages, select the
-                        // corresponding tab.
-                        actionBar.setSelectedNavigationItem(position);
-                    }
-                });
         addDrawerItems();
+        setupEditText();
         setupDrawer();
+        setupViewPager();
         setupActionbar();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -103,6 +96,37 @@ public class StreamFragmentActivity extends ActionBarActivity{
         };
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    private void setupEditText(){
+        mEditText = (EditText) findViewById(R.id.etInputText);
+        mEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                Log.i("Keyboard","focus changed");
+                if (!hasFocus) {
+                    Log.i("Keyboard","does not have focus");
+                    hideKeyboard(v);
+                }
+            }
+        });
+    }
+    private void setupViewPager(){
+        mViewPager  = (ViewPager) findViewById(R.id.main_fragment);
+
+        mViewPager.setAdapter(streamFragmentAdapter);
+        mViewPager.setOnPageChangeListener(
+                new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        // When swiping between pages, select the corresponding tab.
+                        actionBar.setSelectedNavigationItem(position);
+                    }
+                });
+    }
+    private void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
     private void setupActionbar(){
         actionBar = getSupportActionBar();

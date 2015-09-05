@@ -11,6 +11,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
 </android.support.v4.widget.SwipeRefreshLayout>
