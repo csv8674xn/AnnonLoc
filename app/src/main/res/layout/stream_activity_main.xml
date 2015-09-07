@@ -22,12 +22,32 @@
             android:inputType="textCapSentences|textAutoCorrect" />
     </FrameLayout>
     <!-- The navigation drawer -->
-    <ListView android:id="@+id/left_drawer"
-        android:layout_width="240dp"
+    <RelativeLayout
+        android:id="@+id/relative_layout"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="left|start"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="#FFFFFF"/>
+        android:layout_gravity="start" >
+
+        <ListView android:id="@+id/left_drawer"
+                android:layout_width="240dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left|start"
+                android:divider="@android:color/transparent"
+                android:choiceMode="singleChoice"
+                android:dividerHeight="0dp"
+                android:background="#FFFFFF"/>
+        <TextView
+            android:id="@+id/tvFooterView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:gravity="center_vertical"
+            android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+            android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:clickable="true"
+            android:text="Browse" />
+    </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>

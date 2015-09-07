@@ -1,6 +1,7 @@
 package kuyang.annonloc.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -16,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import kuyang.annonloc.Adapter.StreamFragmentAdapter;
 import kuyang.annonloc.Fragment.StreamFragment;
@@ -27,12 +29,14 @@ import kuyang.annonloc.R;
  */
 public class StreamFragmentActivity extends ActionBarActivity{
 
+    private static final String ACTIVITY_TITLE = "Stream List";
+
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ArrayAdapter<String> mAdapter;
     private EditText mEditText;
-    private String mActivityTitle;
+    private TextView mFooterView;
     private ActionBar actionBar;
     private android.support.v4.view.ViewPager mViewPager;
     private StreamFragmentAdapter streamFragmentAdapter;
@@ -43,7 +47,15 @@ public class StreamFragmentActivity extends ActionBarActivity{
         setContentView(R.layout.stream_activity_main);
         mDrawerList = (ListView)findViewById(R.id.left_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mActivityTitle = getTitle().toString();
+        mFooterView = (TextView) findViewById(R.id.tvFooterView);
+        mFooterView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StreamFragmentActivity.this, MapBrowseActivity.class);
+                startActivity (intent);
+                overridePendingTransition(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_top);
+            }
+        });
         streamFragmentAdapter = new StreamFragmentAdapter(getSupportFragmentManager());
         addDrawerItems();
         setupEditText();
@@ -76,8 +88,8 @@ public class StreamFragmentActivity extends ActionBarActivity{
     }
 
     private void addDrawerItems() {
-        String[] osArray = { "Current", "My Location 1", "My Location 2", "My Location 3", "My Location 4" };
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        String[] locationArray = { "Current", "My Location 1", "My Location 2", "My Location 3", "My Location 4" };
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, locationArray);
         mDrawerList.setAdapter(mAdapter);
     }
     private void setupDrawer(){
@@ -90,7 +102,7 @@ public class StreamFragmentActivity extends ActionBarActivity{
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mActivityTitle);
+                getSupportActionBar().setTitle(ACTIVITY_TITLE);
                 invalidateOptionsMenu();
             }
         };
