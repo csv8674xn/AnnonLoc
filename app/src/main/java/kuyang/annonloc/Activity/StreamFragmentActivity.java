@@ -115,9 +115,9 @@ public class StreamFragmentActivity extends ActionBarActivity{
         mEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                Log.i("Keyboard","focus changed");
+                Log.i("Keyboard", "focus changed");
                 if (!hasFocus) {
-                    Log.i("Keyboard","does not have focus");
+                    Log.i("Keyboard", "does not have focus");
                     hideKeyboard(v);
                 }
             }
@@ -166,5 +166,11 @@ public class StreamFragmentActivity extends ActionBarActivity{
                 );
         actionBar.addTab(tab_NEAR);
         actionBar.addTab(tab_PIN);
+    }
+
+    public void startLocationConversationActivity(View v){
+        Intent intent = new Intent(StreamFragmentActivity.this, LocationConversationActivity.class);
+        startActivity (intent);
+        overridePendingTransition(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_top);
     }
 }

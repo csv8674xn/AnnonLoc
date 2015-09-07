@@ -15,7 +15,8 @@
         card_view:cardCornerRadius="4dp"
         card_view:cardElevation="4dp"
         android:clickable="true"
-        android:focusableInTouchMode="true" >
+        android:focusableInTouchMode="true"
+        android:onClick="startLocationConversationActivity">
         <RelativeLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent">
