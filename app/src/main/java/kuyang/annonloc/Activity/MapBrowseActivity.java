@@ -71,7 +71,7 @@ public class MapBrowseActivity extends ActionBarActivity implements OnMapReadyCa
         Location myLocation = locationManager.getLastKnownLocation(provider);
         LatLng currLocation = new LatLng(myLocation.getLatitude(),myLocation.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currLocation));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
         mMap.addMarker(new MarkerOptions().position(currLocation));
     }
 

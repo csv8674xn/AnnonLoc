@@ -2,6 +2,9 @@ package kuyang.annonloc.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -19,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+
 import kuyang.annonloc.Adapter.StreamFragmentAdapter;
 import kuyang.annonloc.Fragment.StreamFragment;
 import kuyang.annonloc.Listener.TabListener;
@@ -27,7 +31,7 @@ import kuyang.annonloc.R;
 /**
  * Created by Yao-Jung on 2015/9/3.
  */
-public class StreamFragmentActivity extends ActionBarActivity{
+public class StreamFragmentActivity extends ActionBarActivity {
 
     private static final String ACTIVITY_TITLE = "Stream List";
 
@@ -57,7 +61,7 @@ public class StreamFragmentActivity extends ActionBarActivity{
             }
         });
         streamFragmentAdapter = new StreamFragmentAdapter(getSupportFragmentManager());
-        addDrawerItems();
+
         setupEditText();
         setupDrawer();
         setupViewPager();
@@ -93,6 +97,7 @@ public class StreamFragmentActivity extends ActionBarActivity{
         mDrawerList.setAdapter(mAdapter);
     }
     private void setupDrawer(){
+        addDrawerItems();
         mDrawerToggle  = new ActionBarDrawerToggle(this, mDrawerLayout,R.string.drawer_open,R.string.drawer_close){
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
