@@ -2,9 +2,6 @@ package kuyang.annonloc.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -171,11 +168,5 @@ public class StreamFragmentActivity extends ActionBarActivity {
                 );
         actionBar.addTab(tab_NEAR);
         actionBar.addTab(tab_PIN);
-    }
-
-    public void startLocationConversationActivity(View v){
-        Intent intent = new Intent(StreamFragmentActivity.this, LocationConversationActivity.class);
-        startActivity (intent);
-        overridePendingTransition(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_top);
     }
 }

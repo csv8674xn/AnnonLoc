@@ -1,8 +1,5 @@
 package kuyang.annonloc.Utility;
 
-
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,6 +18,7 @@ public class LocationContent {
     private final static String VALUE_KEY = "value";
     private final static String COMMENT_ARRAY_KEY = "comment";
     private final static String COMMENT_ITEM_KEY = "text";
+    private final static String LOCATION_IMG = "img";
 
     private String locationName;
     private double locationLatitude;
@@ -28,6 +26,8 @@ public class LocationContent {
     private String locationID ;
     private ArrayList<String> commentArray = new ArrayList<>();
     private JSONObject locationJSON;
+    private String imgURL;
+//    private Bitmap coverPhoto;
 
     public LocationContent(JSONObject contentJSON){
         try{
@@ -37,6 +37,7 @@ public class LocationContent {
             this.locationName = locationJSON.getString(LOCATION_NAME_KEY);
             this.locationLatitude = locationJSON.getDouble(LATITUDE_KEY);
             this.locationLongitude = locationJSON.getDouble(LONGITUDE_KEY);
+            this.imgURL = locationJSON.getString(LOCATION_IMG);
             JSONArray jsonArray= valueJSON.getJSONArray(COMMENT_ARRAY_KEY);
             for(int i=0; i < jsonArray.length(); i++){
                 JSONObject currComment = (JSONObject) jsonArray.get(i);
@@ -50,6 +51,18 @@ public class LocationContent {
     public String getLocationName(){
         return this.locationName;
     }
+
+    public String getLocationID(){
+        return this.locationID;
+    }
+
+    public String getImgURL(){
+        return this.imgURL;
+    }
+
+//    public Bitmap getCoverPhoto(){
+//        return coverPhoto;
+//    }
 
     public ArrayList<String> getComments(){
         return new ArrayList<String>(commentArray);

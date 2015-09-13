@@ -36,10 +36,22 @@ public class ConnectionUtility  {
     }
 
     public static String getLocation(Context context, LatLng location){
+        String SERVER_ADDRESS = context.getString(R.string.SERVER_ADDRESS);
+        String requestURL = SERVER_ADDRESS + "locations"+"?"+LAT_KEY+"="+location.latitude+"&"+LON_KEY+"="+location.longitude;
+        return requestResult(requestURL);
+    }
+
+    public static String getLocationDetail(Context context, String locationID){
+        String SERVER_ADDRESS = context.getString(R.string.SERVER_ADDRESS);
+        String requestURL = SERVER_ADDRESS + "locations/"+locationID;
+        return requestResult(requestURL);
+    }
+
+    private static String requestResult(String requestURL){
         HttpClient client = new DefaultHttpClient();
         String result ="";
         try{
-            String requestURL = context.getString(R.string.SERVER_ADDRESS)+"locations"+"?"+LAT_KEY+"="+location.latitude+"&"+LON_KEY+"="+location.longitude;
+            Log.i("SERVER TEST", requestURL);
             HttpGet get = new HttpGet(requestURL);
             HttpResponse response = client.execute(get);
             HttpEntity resEntity = response.getEntity();
