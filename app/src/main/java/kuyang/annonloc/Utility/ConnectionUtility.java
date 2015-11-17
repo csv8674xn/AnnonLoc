@@ -28,7 +28,7 @@ public class ConnectionUtility  {
     private Context context;
 
     private static final String LAT_KEY = "latitude";
-    private static final String LON_KEY = "longtitude";
+    private static final String LON_KEY = "longitude";
 
     public ConnectionUtility (Context context,onTaskListener listener){
         this.context = context;
