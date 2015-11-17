@@ -11,12 +11,9 @@ import java.util.ArrayList;
 public class LocationContent {
 
     private final static String ID_KEY ="_id";
-    private final static String LOCATION_KEY = "loc_info";
+    private final static String LOCATION_COORDINATE_KEY ="loc";
     private final static String LOCATION_NAME_KEY ="name";
-    private final static String LONGITUDE_KEY = "longitude";
-    private final static String LATITUDE_KEY = "latitude";
-    private final static String VALUE_KEY = "value";
-    private final static String COMMENT_ARRAY_KEY = "comment";
+    private final static String COMMENT_ARRAY_KEY = "comments";
     private final static String COMMENT_ITEM_KEY = "text";
     private final static String LOCATION_IMG = "img";
 
@@ -25,20 +22,19 @@ public class LocationContent {
     private double locationLongitude;
     private String locationID ;
     private ArrayList<String> commentArray = new ArrayList<>();
-    private JSONObject locationJSON;
     private String imgURL;
 //    private Bitmap coverPhoto;
 
     public LocationContent(JSONObject contentJSON){
         try{
             this.locationID = contentJSON.getString(ID_KEY);
-            JSONObject valueJSON = contentJSON.getJSONObject(VALUE_KEY);
-            this.locationJSON = valueJSON.getJSONObject(LOCATION_KEY);
-            this.locationName = locationJSON.getString(LOCATION_NAME_KEY);
-            this.locationLatitude = locationJSON.getDouble(LATITUDE_KEY);
-            this.locationLongitude = locationJSON.getDouble(LONGITUDE_KEY);
-            this.imgURL = locationJSON.getString(LOCATION_IMG);
-            JSONArray jsonArray= valueJSON.getJSONArray(COMMENT_ARRAY_KEY);
+            this.locationName = contentJSON.getString(LOCATION_NAME_KEY);
+            JSONArray coordinate = contentJSON.getJSONArray(LOCATION_COORDINATE_KEY);
+            this.locationLongitude = Double.parseDouble(coordinate.getString(0));
+            this.locationLatitude = Double.parseDouble(coordinate.getString(1));
+
+            this.imgURL = contentJSON.getString(LOCATION_IMG);
+            JSONArray jsonArray= contentJSON.getJSONArray(COMMENT_ARRAY_KEY);
             for(int i=0; i < jsonArray.length(); i++){
                 JSONObject currComment = (JSONObject) jsonArray.get(i);
                 commentArray.add(currComment.getString(COMMENT_ITEM_KEY));
