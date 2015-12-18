@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:layout_marginTop="15dp"
+    android:layout_marginBottom="15dp">
+    <ImageView
+        android:id="@+id/ivProfileLeft"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@mipmap/ic_launcher" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="48dp"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:paddingLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:gravity="right"
+        android:background="@drawable/chat_text_background">
+        <TextView
+            android:textSize="10sp"
+            android:id="@+id/tvId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Testing Id">
+        </TextView>
+        <TextView
+            android:textSize="18sp"
+            android:id="@+id/tvComment"
+            android:layout_width="match_parent"
+            android:text="Testing Comment"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:textStyle="bold">
+        </TextView>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivProfileRight"
+        android:layout_marginLeft="-64dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:visibility="gone"
+        android:src="@mipmap/ic_launcher" />
+</LinearLayout>

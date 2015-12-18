@@ -10,12 +10,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,6 +41,7 @@ public class StreamFragmentActivity extends ActionBarActivity {
     private ArrayAdapter<String> mAdapter;
     private EditText mEditText;
     private TextView mFooterView;
+    private ImageView mNaviagtionIcon;
     private ActionBar actionBar;
     private android.support.v4.view.ViewPager mViewPager;
     private StreamFragmentAdapter streamFragmentAdapter;
@@ -63,14 +67,14 @@ public class StreamFragmentActivity extends ActionBarActivity {
         setupDrawer();
         setupViewPager();
         setupActionbar();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(false);
 
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -144,12 +148,16 @@ public class StreamFragmentActivity extends ActionBarActivity {
     }
     private void setupActionbar(){
         actionBar = getSupportActionBar();
+        LayoutInflater mInflater = LayoutInflater.from(this);
+        View mCustomView = mInflater.inflate(R.layout.actionbar_view, null);
+        actionBar.setCustomView(mCustomView);
+        actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
         ActionBar.Tab tab_NEAR = actionBar.newTab()
                 .setText(R.string.NEAR)
                 .setTabListener(
-                        new TabListener<StreamFragment>(StreamFragmentActivity.this,"NEAR",StreamFragment.class){
+                        new TabListener<StreamFragment>(StreamFragmentActivity.this, "NEAR", StreamFragment.class) {
                             @Override
                             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                                 mViewPager.setCurrentItem(tab.getPosition());
@@ -159,7 +167,7 @@ public class StreamFragmentActivity extends ActionBarActivity {
         ActionBar.Tab tab_PIN = actionBar.newTab()
                 .setText(R.string.PIN)
                 .setTabListener(
-                        new TabListener<StreamFragment>(StreamFragmentActivity.this, "PIN", StreamFragment.class){
+                        new TabListener<StreamFragment>(StreamFragmentActivity.this, "PIN", StreamFragment.class) {
                             @Override
                             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                                 mViewPager.setCurrentItem(tab.getPosition());
@@ -168,5 +176,16 @@ public class StreamFragmentActivity extends ActionBarActivity {
                 );
         actionBar.addTab(tab_NEAR);
         actionBar.addTab(tab_PIN);
+        this.mNaviagtionIcon =(ImageView) findViewById(R.id.ivNavigate);
+        mNaviagtionIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mDrawerLayout.isDrawerOpen(Gravity.START)){
+                    mDrawerLayout.closeDrawers();
+                } else {
+                    mDrawerLayout.openDrawer(Gravity.START);
+                }
+            }
+        });
     }
 }

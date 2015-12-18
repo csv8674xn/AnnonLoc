@@ -9,10 +9,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.Drive;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -27,12 +32,15 @@ import kuyang.annonloc.Utility.LocationContent;
 /**
  * Created by Yao-Jung on 2015/9/4.
  */
-public class StreamFragment extends Fragment {
+public class StreamFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+    private static String TAG = "AnnonLoc: StreamFragment";
 
     private RecyclerView mRecyclerView ;
     private ContentItemAdapter contentItemAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private LocationContent contentArray[];
+    private GoogleApiClient mGoogleApiClient;
 
     public static  StreamFragment newInstance(int num) {
         StreamFragment f = new StreamFragment();
@@ -45,8 +53,6 @@ public class StreamFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.streamfragment, container, false);
-
-        setupAndSendLocation();
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rvItems);
         mRecyclerView.addOnItemTouchListener(
                 new ContentItemTouchListenser(getActivity(), new ContentItemTouchListenser.OnItemClickListener() {
@@ -62,21 +68,22 @@ public class StreamFragment extends Fragment {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
         swipeRefreshLayout.setEnabled(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
         return rootView;
     }
 
 
-    private void setupAndSendLocation(){
+    private void setupAndSendLocation(final Location location){
         new Thread(new Runnable() {
             public void run() {
                 String result = "";
                 try {
-                    LocationManager locationManager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
-                    Criteria criteria = new Criteria();
-                    String provider = locationManager.getBestProvider(criteria, true);
-                    Location myLocation = locationManager.getLastKnownLocation(provider);
-                    LatLng currLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                    LatLng currLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     result = ConnectionUtility.getLocation(getActivity(), currLocation);
                 } catch (NullPointerException e){
                     result = "";
@@ -105,5 +112,24 @@ public class StreamFragment extends Fragment {
                 mRecyclerView.setAdapter(contentItemAdapter);
             }
         });
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+           setupAndSendLocation(mLastLocation);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 }

@@ -1,7 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <item name="actionBarStyle">@style/AnnonLocActionbar</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionBarTabTextStyle">@style/tabtextcolor</item>
+    </style>
 
     <style name="ReplyFormat">
         <item name="android:paddingTop">6dp</item>
@@ -15,5 +21,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">?android:attr/listDivider</item>
+    </style>
+    <style name="AnnonLocActionbar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="background">@color/actionbar_color</item>
+    </style>
+    <style name="tabtextcolor"  parent="@style/Widget.AppCompat.Light.ActionBar.TabText">
+        <item name="android:textColor">@android:color/darker_gray</item>
     </style>
 </resources>

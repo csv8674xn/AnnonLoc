@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import kuyang.annonloc.R;
 import kuyang.annonloc.Utility.ImageDownloadUtility;
 import kuyang.annonloc.Utility.LocationContent;
@@ -40,10 +42,11 @@ public class ContentItemAdapter extends RecyclerView.Adapter<ContentItemAdapter.
     @Override
     public void onBindViewHolder(ContentItemAdapter.TextViewHolder viewHolder, int position) {
         LocationContent currContent = locationContents[position];
+        List<String> commentList = currContent.getComments();
         viewHolder.mLocation.setText(currContent.getLocationName());
-        viewHolder.mComment1.setText(currContent.getComments().get(0));
-        viewHolder.mComment2.setText(currContent.getComments().get(1));
-        viewHolder.mComment3.setText(currContent.getComments().get(2));
+        viewHolder.mComment1.setText(commentList.get(0));
+        viewHolder.mComment2.setText(commentList.get(1));
+        viewHolder.mComment3.setText(commentList.get(2));
         new ImageDownloadUtility(viewHolder.mCoverPhoto).execute(currContent.getImgURL());
     }
 

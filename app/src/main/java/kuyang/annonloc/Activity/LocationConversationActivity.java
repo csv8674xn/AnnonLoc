@@ -2,14 +2,20 @@ package kuyang.annonloc.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,15 +24,17 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 
+import kuyang.annonloc.Adapter.CommentAdapter;
 import kuyang.annonloc.R;
 import kuyang.annonloc.Utility.ConnectionUtility;
-import kuyang.annonloc.Utility.ImageDownloadUtility;
 import kuyang.annonloc.Utility.LocationComment;
 
 /**
  * Created by Yao-Jung on 2015/9/6.
  */
 public class LocationConversationActivity extends ActionBarActivity {
+
+    private static String TAG = "LocationConversationActivity";
 
     private final static String ACTIVITY_TITLE = "Browse";
 
@@ -38,9 +46,10 @@ public class LocationConversationActivity extends ActionBarActivity {
     private String location_ID ;
     private String location_Name;
     private String location_ImgURL;
-    private ArrayAdapter<String> mAdapter;
+    private CommentAdapter mAdapter;
     private ActionBar actionBar;
-    private LocationComment[] locationCommentArray;
+    private ArrayList<LocationComment> locationCommentList;
+    private ImageView mNavigationIcon;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,12 +62,20 @@ public class LocationConversationActivity extends ActionBarActivity {
         mDrawerList = (ListView)findViewById(R.id.left_drawer);
         conversation_list = (ListView) findViewById(R.id.lvConversationList);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        actionBar = getSupportActionBar();
+        TextView coverText = (TextView) findViewById(R.id.tvCoverName);
+        coverText.setText(this.location_Name);
+        setupActionbar();
         addDrawerItems();
         setupDrawer();
         setupConversation();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        setupEditText();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     @Override
@@ -82,8 +99,8 @@ public class LocationConversationActivity extends ActionBarActivity {
 
     private void addDrawerItems() {
         String[] locationArray = { "Current", "My Location 1", "My Location 2", "My Location 3", "My Location 4" };
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, locationArray);
-        mDrawerList.setAdapter(mAdapter);
+        ArrayAdapter<String> drawerAdapter= new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, locationArray);
+        mDrawerList.setAdapter(drawerAdapter);
     }
 
     private void setupDrawer(){
@@ -104,11 +121,20 @@ public class LocationConversationActivity extends ActionBarActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
     private void setupConversation(){
-        View header = (View)getLayoutInflater().inflate(R.layout.top_coverphoto,null);
-        new ImageDownloadUtility((ImageView) header.findViewById(R.id.ivHeaderView)).execute(this.location_ImgURL);
-        TextView headerTitle = (TextView) header.findViewById(R.id.tvLocationName);
-        headerTitle.setText(this.location_Name);
-        conversation_list.addHeaderView(header);
+//        View header = (View)getLayoutInflater().inflate(R.layout.top_coverphoto,null);
+//        new ImageDownloadUtility((ImageView) header.findViewById(R.id.ivHeaderView)).execute(this.location_ImgURL);
+//        TextView headerTitle = (TextView) header.findViewById(R.id.tvLocationName);
+//        headerTitle.setText(this.location_Name);
+//        conversation_list.addHeaderView(header);
+//        new ImageDownloadUtility((ImageView) findViewById(R.id.ivLocationCover)).execute(this.location_ImgURL);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap coverBmp = ConnectionUtility.getBitmapFromURL(location_ImgURL);
+                setupCover(coverBmp);
+            }
+        }).start();
+
         final String locationID = this.location_ID;
         new Thread(new Runnable() {
             @Override
@@ -119,24 +145,84 @@ public class LocationConversationActivity extends ActionBarActivity {
         }).start();
     }
 
+    private void setupCover(Bitmap bmp){
+        final int START_X = 0;
+        final int START_Y = bmp.getHeight() / 3 ;
+        final int WIDTH_PX = getWindowManager().getDefaultDisplay().getWidth();;
+        final int HEIGHT_PX = 100;
+
+        final Bitmap newBitmap = Bitmap.createBitmap(bmp, START_X, START_Y, bmp.getWidth(), HEIGHT_PX, null, false);
+        final ImageView image = (ImageView)findViewById(R.id.ivLocationCover);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                image.setImageBitmap(newBitmap);
+            }
+        });
+    }
+
+    private void setupActionbar(){
+        actionBar = getSupportActionBar();
+        LayoutInflater mInflater = LayoutInflater.from(this);
+        View mCustomView = mInflater.inflate(R.layout.actionbar_view, null);
+        actionBar.setCustomView(mCustomView);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        this.mNavigationIcon =(ImageView) findViewById(R.id.ivNavigate);
+        mNavigationIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
+                    mDrawerLayout.closeDrawers();
+                } else {
+                    mDrawerLayout.openDrawer(Gravity.START);
+                }
+            }
+        });
+    }
+
     private void setupAdapterWithResponse(String result){
         ArrayList<String> chatArray = new ArrayList<>();
         try{
             JSONArray commentArray = new JSONArray(result);
-            locationCommentArray = new LocationComment[commentArray.length()];
+            locationCommentList = new ArrayList<>();
             for(int i = 0; i < commentArray.length(); i++){
-                locationCommentArray[i] = new LocationComment(commentArray.getJSONObject(i));
-                chatArray.add(locationCommentArray[i].getCommentText());
+                locationCommentList.add(new LocationComment(commentArray.getJSONObject(i)));
+                chatArray.add(locationCommentList.get(i).getCommentText());
             }
         } catch (Exception e){
             e.getStackTrace();
         }
 
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, chatArray);
+        mAdapter = new CommentAdapter(this, locationCommentList);
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 conversation_list.setAdapter(mAdapter);
+            }
+        });
+    }
+    private void setupEditText(){
+        final ImageView button = (ImageView) findViewById(R.id.btSend);
+        final EditText dtMessage = (EditText) findViewById(R.id.etMessage);
+        final String location_ID = this.location_ID;
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "TEST " + dtMessage.getText().toString());
+                        boolean isPostSuccess = ConnectionUtility.postTalk(context, location_ID, dtMessage.getText().toString(), "fake_icon","fack_id");
+                        if(isPostSuccess){
+                            Log.d(TAG, "Success Post");
+                        } else {
+                            Log.d(TAG, "Failed Post");
+                        }
+                    }
+                }).start();
             }
         });
     }

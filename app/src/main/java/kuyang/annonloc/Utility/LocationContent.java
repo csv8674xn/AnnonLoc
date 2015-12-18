@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Yao-Jung on 2015/9/9.
@@ -61,6 +62,10 @@ public class LocationContent {
 //    }
 
     public ArrayList<String> getComments(){
-        return new ArrayList<String>(commentArray);
+        if(commentArray.size() == 0){
+            return new ArrayList<String>(Arrays.asList(new String[]  {"","",""}));
+        }else {
+            return new ArrayList<String>(commentArray);
+        }
     }
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#9A2A1A">
+
+    <ImageView
+        android:id="@+id/ivNavigate"
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/actionbar_navi"
+        />
+
+    <ImageView
+        android:id="@+id/ivMenu"
+        android:layout_width="25dp"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha" />
+
+    <ImageView
+        android:id="@+id/ivSearch"
+        android:layout_width="25dp"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/ivMenu"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/abc_ic_search_api_mtrl_alpha" />
+
+</RelativeLayout>

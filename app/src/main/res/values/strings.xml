@@ -5,4 +5,6 @@
     <string name="NEAR">Nearbyr</string>
     <string name="PIN">Interest</string>
     <string name="SERVER_ADDRESS">http://ec2-52-88-224-149.us-west-2.compute.amazonaws.com:3000/</string>
+    <string name="chat_hint">This is me speaking</string>
+    <string name="send">send</string>
 </resources>
